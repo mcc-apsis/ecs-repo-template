@@ -1,0 +1,8 @@
+repos:
+  - repo: https://github.com/pappasam/toml-sort
+    rev: 2970ae9bb7124fe5117a27e10c10d2da051ce05a # v0.24.4
+    hooks: 
+      - id: toml-sort
+        args: [--in-place, --all]
+        files: ^template/pyproject\.toml\.jinja$
+        types: [file]

@@ -2,4 +2,25 @@ project_name:
   type: str
   help: What is your project name
 
+project_description:
+  type: str
+
+python_version:
+  type: str
+  help: "Which minimum Python version should this project target. (Select the most recent for highest performance and access to features, or earlier versions if you want your code to be runnable by a wider audience)."
+  default: "3.14"
+  choices:
+    - "3.11"
+    - "3.12"
+    - "3.13"
+    - "3.14"
+
 _subdirectory: template
+
+_tasks:
+  - git init
+  - uv sync
+  - uvx prek install
+  - git add -A
+  - uvx prek run
+  - "git commit -m 'initial commit: repo initialised from copier'"

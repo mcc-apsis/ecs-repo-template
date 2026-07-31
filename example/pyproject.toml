@@ -1,0 +1,31 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatch-vcs", "hatchling"]
+
+[project]
+description = "a"
+dynamic = ["version"]
+name = "a"
+requires-python = ">=3.14"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/a"]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.ruff]
+target-version = "py314"
+
+[tool.ruff.lint]
+select = [
+  "B", # flake8-bugbear
+  "E", # pycodestyle errors
+  "F", # Pyflakes
+  "I", # isort
+  "UP", # pyupgrade
+  "W" # pycodestyle warnings
+]
+
+[tool.ty.environment]
+python-version = "3.14"
