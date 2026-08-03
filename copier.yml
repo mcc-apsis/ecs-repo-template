@@ -15,12 +15,39 @@ python_version:
     - "3.13"
     - "3.14"
 
+use_dvc:
+  type: bool
+  help: "Do you want to use dvc to version control data using the ECS shared drive?"
+  default: true
+
+dvc_ts01_remote_path:
+  type: str
+  default: "/data/rd5/ecs/DVC/{{ _copier_answers._folder_name }}"
+  when: "{{ use_dvc }}"
+  help: "Remote path on ts01 for storing DVC cache files"
+
+dvc_ts01_user:
+  type: str
+  default: ""
+  when: "{{ use_dvc }}"
+  help: "SSH username for ts01 (leave blank to use current system user)"
+
 _subdirectory: template
 
 _tasks:
   - git init
   - uv sync
   - uvx prek install
+  - |-
+      {% if use_dvc %}
+      uv add "dvc[ssh]"
+      test -d .dvc || uv run dvc init --no-scm
+      uv run dvc config core.analytics false
+      uv run dvc remote add -d -f ts01 "ssh://ts01.pik-potsdam.de/data/rd5/ecs/DVC/{{ dvc_ts01_remote_path }}"
+      {% if dvc_ts01_user %}
+      uv run dvc remote modify ts01 user {{ dvc_ts01_user }}
+      {% endif %}
+      {% endif %}
 
 _message_after_copy: |
   🎉 Project initialized successfully!
@@ -31,3 +58,8 @@ _message_after_copy: |
     git add -A                 # Review staged files
     uvx prek run --all-files  # Run pre-commit
     git commit -m "chore: initial commit from ecs-repo-template"
+
+  {% if use_dvc %}
+  📦 DVC Storage Configured:
+    - Default remote: ts01
+  {% endif %}
