@@ -21,9 +21,6 @@ _tasks:
   - git init
   - uv sync
   - uvx prek install
-  - git add -A
-  - uvx prek run
-  - git add -A
 
 _message_after_copy: |
   🎉 Project initialized successfully!
@@ -31,5 +28,6 @@ _message_after_copy: |
   Next steps:
     cd {{ _copier_answers._folder_name | default('.', true) }}
     code .                     # Open in VS Code
-    git add -A                 # Review and stage files
+    git add -A                 # Review staged files
+    uvx prek run --all-files  # Run pre-commit
     git commit -m "chore: initial commit from ecs-repo-template"
