@@ -62,4 +62,5 @@ _message_after_copy: |
   {% if use_dvc %}
   📦 DVC Storage Configured:
     - Default remote: ts01
+    - Make sure that /data/rd5/ecs/DVC/{{ dvc_ts01_remote_path }} on ts01
   {% endif %}
