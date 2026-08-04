@@ -5,3 +5,4 @@ repos:
       - id: pyproject-fmt
         types_or: [toml, jinja]
         files: ^template/pyproject\.toml\.jinja$
+        exclude: ^template/scripts

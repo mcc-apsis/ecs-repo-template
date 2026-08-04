@@ -34,7 +34,11 @@ dvc_ts01_user:
 
 _subdirectory: template
 
+_skip_if_exists:
+  - pyproject.toml
+
 _tasks:
+  - uv run scripts/merge_pyproject.py
   - git init
   - uv sync
   - uvx prek install
