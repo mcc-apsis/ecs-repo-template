@@ -32,7 +32,15 @@ dvc_ts01_user:
   when: "{{ use_dvc }}"
   help: "SSH username for ts01 (leave blank to use current system user)"
 
+use_vscode:
+  type: bool
+  help: "Do you use VSCode? (if yes write standard config)"
+  default: true
+
 _subdirectory: template
+
+_exclude:
+  - "{% if not use_vscode %}.vscode{% endif %}"
 
 _skip_if_exists:
   - pyproject.toml
