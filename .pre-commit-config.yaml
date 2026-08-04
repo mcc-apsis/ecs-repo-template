@@ -3,6 +3,5 @@ repos:
     rev: "b82a24a520c5d496cb7b23b4e9b63537c280f51b" #v2.27.0
     hooks:
       - id: pyproject-fmt
-        types_or: [toml, jinja]
-        files: ^template/pyproject\.toml\.jinja$
+        files: ^template/pyproject\.toml\.jinja\.src$
         exclude: ^template/scripts
