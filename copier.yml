@@ -43,11 +43,14 @@ _tasks:
       uv add "dvc[ssh]"
       test -d .dvc || uv run dvc init --no-scm
       uv run dvc config core.analytics false
-      uv run dvc remote add -d -f ts01 "ssh://ts01.pik-potsdam.de/data/rd5/ecs/DVC/{{ dvc_ts01_remote_path }}"
+      uv run dvc remote add -d -f ts01 "ssh://ts01.pik-potsdam.de{{ dvc_ts01_remote_path }}"
       {% if dvc_ts01_user %}
       uv run dvc remote modify ts01 user {{ dvc_ts01_user }}
       {% endif %}
       {% endif %}
+  - git add -A
+  - uvx prek run --all-files || true
+  - git add -A
 
 _message_after_copy: |
   🎉 Project initialized successfully!
