@@ -1,4 +1,4 @@
-project_name:
+projectname:
   type: str
   help: What is your project name
 
