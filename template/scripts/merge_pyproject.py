@@ -12,6 +12,8 @@ import tomli_w
 import yaml
 import jinja2
 import subprocess
+import re
+import keyword
 from pathlib import Path
 
 TEMPLATE_FILE = Path("pyproject.toml.jinja.src")
@@ -61,6 +63,36 @@ def merge_configs(new_config: dict, old_config: dict):
 
     return new_config
 
+def generate_normal_project_name(name: str) -> str:
+    """Normalize project name to valid Python package name."""
+    # Lowercase and replace spaces/dashes with underscores
+    normalized = name.lower().replace('-', '_').replace(' ', '_')
+    # Remove any non-alphanumeric and non-underscore characters
+    normalized = re.sub(r'[^a-z0-9_]', '', normalized)
+    # Collapse multiple underscores
+    normalized = re.sub(r'_+', '_', normalized)
+    # Remove leading/trailing underscores
+    normalized = normalized.strip('_')
+    # Ensure doesn't start with digit
+    if normalized and normalized[0].isdigit():
+        normalized = f'pkg_{normalized}'
+    # Avoid Python keywords
+    if keyword.iskeyword(normalized):
+        normalized = f'{normalized}_pkg'
+    return normalized or 'package'
+
+def normalise_name(name: str, config: dict):
+    """Normalise project name for package compatibility."""
+    normalised_name = generate_normal_project_name(name)
+    if 'tool' in config and 'hatch' in config['tool']:
+        hatch = config['tool']['hatch']
+        if 'build' in hatch and 'targets' in hatch['build']:
+            hatch['build']['targets']['wheel']['packages'] = [f"src/{normalised_name}"]
+
+    old_path = Path(f"src/{name}")
+    new_path = Path(f"src/{normalised_name}")
+    if old_path.exists() and old_path != new_path:
+        old_path.rename(new_path)
 
 def main():
     # Read answers and render template
@@ -72,7 +104,9 @@ def main():
     
     # Merge
     if old_config:
-        merge_configs(new_config, old_config)
+        new_config = merge_configs(new_config, old_config)
+
+    normalise_name(answers["projectname"], new_config)
     
     # Write back
     with open("pyproject.toml", "wb") as f:

@@ -22,8 +22,9 @@ use_dvc:
 
 dvc_ts01_remote_path:
   type: str
-  default: "/data/rd5/ecs/DVC/{{ _copier_answers._folder_name }}"
+  default: "/data/rd5/ecs/DVC/{{ _copier_answers.projectname }}"
   when: "{{ use_dvc }}"
+  validator: "{% if not dvc_ts01_remote_path|length %}DVC path cannot be empty {% elif dvc_ts01_remote_path|regex_search('^/data/rd5/ecs/DVC/?$') %}Cannot use the group DVC root path{% elif dvc_ts01_remote_path == '/' %}DVC path cannot be root{% endif %}"
   help: "Remote path on ts01 for storing DVC cache files"
 
 dvc_ts01_user:
@@ -57,7 +58,7 @@ _tasks:
       uv run dvc config core.analytics false
       uv run dvc remote add -d -f ts01 "ssh://ts01.pik-potsdam.de{{ dvc_ts01_remote_path }}"
       {% if dvc_ts01_user %}
-      uv run dvc remote modify ts01 user {{ dvc_ts01_user }}
+      uv run dvc remote modify --local ts01 user {{ dvc_ts01_user }}
       {% endif %}
       {% endif %}
   - git add -A
