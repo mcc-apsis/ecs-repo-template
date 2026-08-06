@@ -1,0 +1,35 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatch-vcs", "hatchling" ]
+
+[project]
+name = "{{projectname}}"
+description = "{{project_description}}"
+requires-python = ">={{python_version}}"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+dynamic = [ "version" ]
+dependencies = []
+
+[tool.hatch]
+version.source = "vcs"
+build.targets.wheel.packages = [ "src/{{projectname}}" ]
+
+[tool.ruff]
+lint.select = [
+  "B",  # flake8-bugbear
+  "E",  # pycodestyle errors
+  "F",  # Pyflakes
+  "I",  # isort
+  "UP", # pyupgrade
+  "W"  # pycodestyle warnings
+]
+
+[tool.ty]
+environment.python-version = "{{ python_version }}"

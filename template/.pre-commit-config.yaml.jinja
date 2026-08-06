@@ -9,12 +9,11 @@ repos:
         args:
           - --config=pyproject.toml
 
-  - repo: https://github.com/pappasam/toml-sort
-    rev: v0.24.3
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: "b82a24a520c5d496cb7b23b4e9b63537c280f51b" #v2.27.0
     hooks:
-      - id: toml-sort-fix
-        args: ["--check"]
-        exclude: '^(uv\.lock)$'
+      - id: pyproject-fmt
+        files: ^pyproject\.toml$
 
   - repo: https://github.com/astral-sh/ty-pre-commit
     # ty version.

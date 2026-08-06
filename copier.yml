@@ -1,4 +1,4 @@
-project_name:
+projectname:
   type: str
   help: What is your project name
 
@@ -15,14 +15,54 @@ python_version:
     - "3.13"
     - "3.14"
 
+use_dvc:
+  type: bool
+  help: "Do you want to use dvc to version control data using the ECS shared drive?"
+  default: true
+
+dvc_ts01_remote_path:
+  type: str
+  default: "/data/rd5/ecs/DVC/{{ _copier_answers.projectname }}"
+  when: "{{ use_dvc }}"
+  validator: "{% if not dvc_ts01_remote_path|length %}DVC path cannot be empty {% elif dvc_ts01_remote_path|regex_search('^/data/rd5/ecs/DVC/?$') %}Cannot use the group DVC root path{% elif dvc_ts01_remote_path == '/' %}DVC path cannot be root{% endif %}"
+  help: "Remote path on ts01 for storing DVC cache files"
+
+dvc_ts01_user:
+  type: str
+  default: ""
+  when: "{{ use_dvc }}"
+  help: "SSH username for ts01 (leave blank to use current system user)"
+
+use_vscode:
+  type: bool
+  help: "Do you use VSCode? (if yes write standard config)"
+  default: true
+
 _subdirectory: template
 
+_exclude:
+  - "{% if not use_vscode %}.vscode{% endif %}"
+
+_skip_if_exists:
+  - pyproject.toml
+
 _tasks:
+  - uv run scripts/merge_pyproject.py
   - git init
   - uv sync
   - uvx prek install
+  - |-
+      {% if use_dvc %}
+      uv add "dvc[ssh]"
+      test -d .dvc || uv run dvc init --no-scm
+      uv run dvc config core.analytics false
+      uv run dvc remote add -d -f ts01 "ssh://ts01.pik-potsdam.de{{ dvc_ts01_remote_path }}"
+      {% if dvc_ts01_user %}
+      uv run dvc remote modify --local ts01 user {{ dvc_ts01_user }}
+      {% endif %}
+      {% endif %}
   - git add -A
-  - uvx prek run
+  - uvx prek run --all-files || true
   - git add -A
 
 _message_after_copy: |
@@ -31,5 +71,12 @@ _message_after_copy: |
   Next steps:
     cd {{ _copier_answers._folder_name | default('.', true) }}
     code .                     # Open in VS Code
-    git add -A                 # Review and stage files
+    git add -A                 # Review staged files
+    uvx prek run --all-files  # Run pre-commit
     git commit -m "chore: initial commit from ecs-repo-template"
+
+  {% if use_dvc %}
+  📦 DVC Storage Configured:
+    - Default remote: ts01
+    - Make sure that /data/rd5/ecs/DVC/{{ dvc_ts01_remote_path }} on ts01
+  {% endif %}
