@@ -1,0 +1,24 @@
+# How to organize data in a project
+
+## Top-level structure
+
+```
+├─ data/
+│  ├─ raw/                     # Immutable data
+│  ├─ intermediate/            # Processed intermediate outputs
+│  ├─ processed/               # Final processed outputs
+│  └─ labeling/                # Labeling data
+```
+
+## Labeling data organization (incorporates NACSOS)
+
+```
+├─ labeling/
+│  ├─ raw/
+│  │  ├─ round01/
+│  │  │  ├─ 01_nacsos_import/
+│  │  │  ├─ 02_nacsos_export/
+│  │  │  ├─ 03_discussion/
+│  │  │  ├─ 04_resolved/
+│  │  │  ├─ 05_deet_ready/
+```
