@@ -20,3 +20,14 @@ repos:
     rev: ac85803d0443afba1e0700690366fd2d39e02580 # v0.0.65
     hooks:
       - id: ty
+{% if use_dvc %}
+
+  - repo: local
+    hooks:
+      - id: dvc-pushed
+        name: DVC data is pushed to remote
+        entry: uv run python hooks/check_dvc_pushed.py
+        language: system
+        files: '(\.dvc|dvc\.lock|dvc\.yaml)$'
+        pass_filenames: false
+{% endif %}

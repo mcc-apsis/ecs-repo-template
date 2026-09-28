@@ -42,6 +42,7 @@ _subdirectory: template
 
 _exclude:
   - "{% if not use_vscode %}.vscode{% endif %}"
+  - "{% if not use_dvc %}hooks/check_dvc_pushed.py{% endif %}"
 
 _skip_if_exists:
   - pyproject.toml
