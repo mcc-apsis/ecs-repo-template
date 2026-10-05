@@ -1,8 +1,11 @@
 ## Quickstart - create a repo using this template
 
 ```
-uvx copier copy gh:mcc-apsis/ecs-repo-template --trust my-new-project
+uvx copier copy gh:pik-ecs/ecs-repo-template --trust my-new-project
 ```
+
+Projects come with an optional, one-command [protected `main` branch](choices/branch-protection.md)
+for when they're on GitHub.
 
 ## Background what is this?
 
