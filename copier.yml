@@ -76,6 +76,11 @@ _message_after_copy: |
     uvx prek run --all-files  # Run pre-commit
     git commit -m "chore: initial commit from ecs-repo-template"
 
+  Optional: protect main (on GitHub, and a local pre-commit guard against
+  committing on main by accident):
+    uv run .github/rulesets/protect.py
+  (what that does: https://pik-ecs.github.io/ecs-repo-template/choices/branch-protection/)
+
   {% if use_dvc %}
   📦 DVC Storage Configured:
     - Default remote: ts01

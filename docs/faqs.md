@@ -7,7 +7,7 @@ For example, you may want to extend or restrict the code style rules implemented
 You can just make changes directly in the branch, and refer to this when creating a project from the template.
 
 ```
-uvx copier copy gh:mcc-apsis/ecs-repo-template --trust --vcs-ref cool-new-branch my-new-project
+uvx copier copy gh:pik-ecs/ecs-repo-template --trust --vcs-ref cool-new-branch my-new-project
 ```
 
 If you think that others would benefit from this change, please open a pull request into main.

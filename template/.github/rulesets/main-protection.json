@@ -1,0 +1,34 @@
+{
+  "name": "protect main",
+  "target": "BRANCH",
+  "enforcement": "ACTIVE",
+  "conditions": {
+    "refName": {
+      "include": ["refs/heads/main"],
+      "exclude": []
+    }
+  },
+  "bypassActors": [
+    {
+      "repositoryRoleDatabaseId": 5,
+      "bypassMode": "ALWAYS"
+    }
+  ],
+  "rules": [
+    {
+      "type": "DELETION"
+    },
+    {
+      "type": "PULL_REQUEST",
+      "parameters": {
+        "pullRequest": {
+          "requiredApprovingReviewCount": 0,
+          "dismissStaleReviewsOnPush": false,
+          "requireCodeOwnerReview": false,
+          "requireLastPushApproval": false,
+          "requiredReviewThreadResolution": false
+        }
+      }
+    }
+  ]
+}
